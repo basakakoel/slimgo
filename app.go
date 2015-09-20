@@ -22,7 +22,7 @@ func NewApp() *App {
 }
 
 func (this *App) Run() {
-	address := HttpAddres
+	address := HttpAddress
 	if HttpPort != 0 {
 		address = fmt.Sprintf("%s:%d", address, HttpPort)
 	}

@@ -61,10 +61,10 @@ func (this *Controller) Redirect(url string, status int) {
 	this.Context.Redirect(url, status)
 }
 
-func (this *Controller) ServeJson(data interface{}) {
+func (this *Controller) ServeJson(data ...interface{}) {
 	hasIntent := true
-	if data != nil {
-		this.Context.Output.Json(data, hasIntent)
+	if len(data) > 0 && data[0] != nil {
+		this.Context.Output.Json(data[0], hasIntent)
 	} else {
 		this.Context.Output.Json(this.Data["json"], hasIntent)
 	}
@@ -72,6 +72,6 @@ func (this *Controller) ServeJson(data interface{}) {
 
 //default index
 func (this *Controller) Index() {
-	this.Data["json"] = "Hello Slimgo."
+	this.Data["json"] = "Default page of " + AppName
 	this.ServeJson(nil)
 }
