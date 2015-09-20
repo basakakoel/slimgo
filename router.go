@@ -1,11 +1,11 @@
 package slimgo
 
 import (
+	"github.com/jesusslim/slimgo/context"
+	"github.com/jesusslim/slimgo/utils"
 	"net/http"
 	"path"
 	"reflect"
-	"slimgo/context"
-	"slimgo/utils"
 	"strings"
 	"time"
 )

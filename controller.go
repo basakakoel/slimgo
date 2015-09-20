@@ -1,7 +1,7 @@
 package slimgo
 
 import (
-	"slimgo/context"
+	"github.com/jesusslim/slimgo/context"
 )
 
 type ControllerInterface interface {
