@@ -61,12 +61,33 @@ func (this *Controller) Redirect(url string, status int) {
 	this.Context.Redirect(url, status)
 }
 
+//json
 func (this *Controller) ServeJson(data ...interface{}) {
 	hasIntent := true
 	if len(data) > 0 && data[0] != nil {
 		this.Context.Output.Json(data[0], hasIntent)
 	} else {
 		this.Context.Output.Json(this.Data["json"], hasIntent)
+	}
+}
+
+//jsonp
+func (this *Controller) ServeJsonp(data ...interface{}) {
+	hasIntent := true
+	if len(data) > 0 && data[0] != nil {
+		this.Context.Output.Jsonp(data[0], hasIntent)
+	} else {
+		this.Context.Output.Jsonp(this.Data["json"], hasIntent)
+	}
+}
+
+//xml
+func (this *Controller) ServeXml(data ...interface{}) {
+	hasIntent := true
+	if len(data) > 0 && data[0] != nil {
+		this.Context.Output.Xml(data[0], hasIntent)
+	} else {
+		this.Context.Output.Xml(this.Data["xml"], hasIntent)
 	}
 }
 

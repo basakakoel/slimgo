@@ -130,3 +130,11 @@ func (this *ContextInput) Cookie(key string) string {
 	}
 	return cookie.Value
 }
+
+//get param
+func (this *ContextInput) GetParam(key string) string {
+	if this.Request.Form == nil {
+		this.Request.ParseForm()
+	}
+	return this.Request.Form.Get(key)
+}

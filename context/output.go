@@ -5,7 +5,10 @@ import (
 	"compress/flate"
 	"compress/gzip"
 	"encoding/json"
+	"encoding/xml"
+	"errors"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"path"
@@ -146,6 +149,50 @@ func (this *ContextOutput) Json(content interface{}, hasIntent bool) error {
 		return err
 	}
 	this.Body(jsonBody)
+	return nil
+}
+
+//serve jsonp
+func (this *ContextOutput) Jsonp(content interface{}, hasIntent bool) error {
+	this.Header("Content-Type", "application/javascript; charset=utf-8")
+	var jsonBody []byte
+	var err error
+	if hasIntent {
+		jsonBody, err = json.MarshalIndent(content, "", " ")
+	} else {
+		jsonBody, err = json.Marshal(content)
+	}
+	if err != nil {
+		http.Error(this.Context.ResponseWriter, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+	callback := this.Context.Input.GetParam("callback")
+	if callback == "" {
+		return errors.New("Callback not set.")
+	}
+	cbBody := bytes.NewBufferString(" " + template.JSEscapeString(callback))
+	cbBody.WriteString("(")
+	cbBody.Write(jsonBody)
+	cbBody.WriteString(");\r\n")
+	this.Body(cbBody.Bytes())
+	return nil
+}
+
+//xml  : content should be class or string
+func (this *ContextOutput) Xml(content interface{}, hasIntent bool) error {
+	this.Header("Content-Type", "application/xml; charset=utf-8")
+	var xmlBody []byte
+	var err error
+	if hasIntent {
+		xmlBody, err = xml.MarshalIndent(content, "", " ")
+	} else {
+		xmlBody, err = xml.Marshal(content)
+	}
+	if err != nil {
+		http.Error(this.Context.ResponseWriter, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+	this.Body(xmlBody)
 	return nil
 }
 
