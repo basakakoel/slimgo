@@ -21,7 +21,28 @@ func NewApp() *App {
 	return app
 }
 
+func (this *App) beforeRun() {
+	//timetask
+	for name, t := range tasks {
+		if t.runtag == true {
+			t.Start()
+			Logger.Info("Timetask:", name, " is running.")
+		}
+	}
+
+	//hooks
+	for key, f := range hooks.hookBeforeAppRun {
+		err := f()
+		if err != nil {
+			Logger.Error("Hook:", key, " err,", err.Error())
+		} else {
+			Logger.Info("Hook:", key, " finished.")
+		}
+	}
+}
+
 func (this *App) Run() {
+	this.beforeRun()
 	address := HttpAddress
 	if HttpPort != 0 {
 		address = fmt.Sprintf("%s:%d", address, HttpPort)

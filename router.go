@@ -189,11 +189,23 @@ func (this *ControllerRegister) ServeHTTP(reponseWriter http.ResponseWriter, req
 			panic("controller is not ControllerInterface")
 		}
 		execController.Init(ctx, ctrlInfo.controllerType.Name(), ctrlInfo.method)
+
+		//hooks
+		for _, f := range hooks.hookBeforeHttpPre {
+			f(ctx)
+		}
+
 		execController.Pre()
 		in := make([]reflect.Value, 0)
 		method := ctrlObj.MethodByName(ctrlInfo.method)
 		method.Call(in)
 		execController.Finish()
+
+		//hooks
+		for _, f := range hooks.hookAfterHttpFinish {
+			f(ctx)
+		}
+
 	}
 
 AfterAll:
