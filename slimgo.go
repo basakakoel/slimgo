@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const VERSION = "1.02"
+
 func Run(address ...string) {
 	if len(address) > 0 && address[0] != "" {
 		spAddr := strings.Split(address[0], ":")
